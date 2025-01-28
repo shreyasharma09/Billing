@@ -1,5 +1,5 @@
 const mongoose=require("mongoose")
-
+require("dotenv").config()
 const BaseSchema = new mongoose.Schema(                 //commom schema of executive nd shopkeeper
   {
       name: {

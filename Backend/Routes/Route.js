@@ -67,7 +67,7 @@ Routes.post("/login", async (req, resp) => {
             const payload = { id: result._id }      //obj of id only for security
             const token = jwt.sign(payload, process.env.JSON_SECRET_KEY)     //id(payload),secret key==>token
 
-            return HandleSuccessResponse(resp, 202, "Login Successsfully", token)
+            return HandleSuccessResponse(resp, 202, "Login Successsfully", {token,role:result.role})
         }
 
         return HandleSuccessResponse(resp, 401, "Invalid Password")
@@ -110,12 +110,19 @@ Routes.post("/disable", async (req, resp) => {
     }
 })
 
- 
+ Routes.post("/fetchuserdetails",checkuserdetails,async(req,resp)=>{
+        const payload={id:req.user._id}
+        const token= jwt.sign(payload,process.env.JSON_SECRET_KEY)
+        return HandleSuccessResponse(resp,202,"Login Successfully", {role:req.user.role, token})
+ })
+
+
+
 
 
 Routes.post("/addproduct",checkuserdetails, async (req, resp) => {
     try {
-        const { name, company, model, description, price, discount, rate, tax } = req.body
+        const { name, company, model, description, price, discount, rate, tax , stock } = req.body
         if (!name || !company || !model || !description || !price || !discount || !rate || !tax ) return HandleSuccessResponse(resp, 404, "Field is empty")
 
         const existinguser = await Product.findOne({ model })

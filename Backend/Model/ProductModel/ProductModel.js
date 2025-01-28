@@ -1,6 +1,6 @@
 const mongoose=require("mongoose")
 
-require("dotenv").config()         //---,mongodb m undefined,email is not valid
+require("dotenv").config()      
 
 const productschema= new mongoose.Schema({
     userid:{

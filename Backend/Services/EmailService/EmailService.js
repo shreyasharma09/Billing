@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');               //install it and paste code from nodemailer at w3school
+require("dotenv").config()
 
 var transporter = nodemailer.createTransport({      //create medium to transfer otp from email of superadmin to email of shopkeeper
   service: 'gmail',
