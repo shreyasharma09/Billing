@@ -3,6 +3,7 @@ const { generateotp, verifyotp } = require("../Services/OtpService/OtpService")
 const { otptoemailforverification } = require("../Services/EmailService/EmailService")
 const { User, Shopkeeper } = require("../Model/UserModel/UserModel")
 const Product = require("../Model/ProductModel/ProductModel")
+require("dotenv").config()
 const HandleSuccessResponse = require("../HandleResponse/HandleResponse")
 const jwt = require("jsonwebtoken")                     //install it | helps in login | helps to secure id in an another obj called payload | make string of 30-40 words  |Format--> _._._  ==>1) id(in hash string format) 2)security 3)secret key which is defined by us
 const checkuserdetails = require("../Middleswares/Checkuserdetails")
@@ -56,6 +57,7 @@ Routes.post("/createshopkeeper", async (req, resp) => {
 Routes.post("/login", async (req, resp) => {
     try {
         const { email, password } = req.body
+        
         if (!email || !password) return HandleSuccessResponse(resp, 404, "Field is empty")
 
         const result = await User.findOne({ email })

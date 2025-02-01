@@ -1,6 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const AddProductModal = (props) => {
+    const add=async(e)=>{
+      try {
+        e.preventDefault()
+        const response= await fetch("http://localhost:3010/api/addproduct",{
+         method:"post",
+         body:JSON.stringify,
+         headers:{
+             "Content-Type":"application/json",
+         }
+        })
+      } catch (error) {
+        
+      }
+    }
     return (
         <div>
             <div class="modal-backdrop fade show"></div>
@@ -20,16 +34,40 @@ const AddProductModal = (props) => {
                                             <input type="text" className="form-control" id="Name" placeholder="Enter Name" />
                                         </div>
                                         <div className="mb-3">
-                                            <label htmlFor="paymentdetails" className="form-label">Payment Details</label>
-                                            <textarea className="form-control" placeholder="Enter Payment Description" id="paymentdetails" defaultValue={""} />
+                                            <label htmlFor="Name" className="form-label">Product Model</label>
+                                            <input type="text" className="form-control" id="Name" placeholder="Enter model" />
                                         </div>
                                         <div className="mb-3">
-                                            <label htmlFor="amount" className="form-label">Amount</label>
-                                            <input type="number" className="form-control" id="amount" placeholder="Enter Amount" />
+                                            <label htmlFor="Name" className="form-label">Product Company</label>
+                                            <input type="text" className="form-control" id="Name" placeholder="Enter company" />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="paymentdetails" className="form-label">Product Description</label>
+                                            <textarea className="form-control" placeholder="Enter Product Description" id="paymentdetails" defaultValue={""} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="Name" className="form-label">Product price</label>
+                                            <input type="text" className="form-control" id="Name" placeholder="Enter Price" />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="amount" className="form-label">Rate</label>
+                                            <input type="number" className="form-control" id="amount" placeholder="Enter rate" />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="Name" className="form-label"> Tax</label>
+                                            <input type="text" className="form-control" id="Name" placeholder="Enter tax" />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="Name" className="form-label">Discount</label>
+                                            <input type="text" className="form-control" id="Name" placeholder="Enter discount" />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="Name" className="form-label">Product Stock</label>
+                                            <input type="text" className="form-control" id="Name" placeholder="Enter stock" />
                                         </div>
                                         <div className="hstack gap-2 justify-content-end">
                                             <button type="button" className="btn btn-light" onClick={()=>props.setToggle(false)} >Close</button>
-                                            <button type="submit" className="btn btn-success" id="addNewMember">Add Customer</button>
+                                            <button onClick={add} type="submit" className="btn btn-success" id="addNewMember">Add Customer</button>
                                         </div>
                                     </div>
                                 </div>

@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom"
 const SignInComponent = () => {
     const [passwordicon, setpasswordicon] = useState(false)
     const [obj, setobj] = useState({})
-    const [rememberme, setrememberme] = useState(false)
     const [loading, setloading] = useState(false)
+    const [rememberme, setrememberme] = useState(false)
+   
     const navigate = useNavigate()
 
     const set = (event) => setobj({ ...obj, [event.target.name]: event.target.value })
@@ -24,7 +25,7 @@ const SignInComponent = () => {
             alert(result?.message)
             if (response.status === 202) {
                 localStorage.clear()                                     //store result in local storage to get its data
-                localStorage.setItem("Userinfo", JSON.stringify({ "Authorization": result.data.token, "Rememberme": rememberme }))                 //token (id) nikali h jis s sara data nikal skte h
+                localStorage.setItem("Userinfo", JSON.stringify({ "Authorization": result.data.token, "Rememberme": rememberme }))           //token (id) nikali h jis s sara data nikal skte h
                 navigate("/" + result.data.role)                           //its common for superadmin shopkeeper nd executive
             }
             setloading(false)
@@ -46,7 +47,7 @@ const SignInComponent = () => {
         try {
             const response = await fetch("http://localhost:3010/api/fetchuserdetails", {
                 method: "post",
-                headers: {
+                headers: {                                            //only token pass krna h or token passes in only headers not body
                     "Content-Type": "application/json",
                     "Authorization": token
                 }
@@ -90,9 +91,9 @@ const SignInComponent = () => {
                                                             <input type="email" className="form-control" name='email' onChange={set} id="email" placeholder="Enter email" />
                                                         </div>
                                                         <div className="mb-2">
-                                                            <label htmlFor="userpassword" className="form-label" name='password' onChange={set}>Password</label>
+                                                            <label htmlFor="userpassword" className="form-label" >Password</label>
                                                             <div className="position-relative auth-pass-inputgroup mb-3">
-                                                                <input type={passwordicon ? "text" : "password"} className="form-control pe-5 password-input" placeholder="Enter password" />
+                                                                <input type={passwordicon ? "text" : "password"} className="form-control pe-5 password-input" placeholder="Enter password" name='password' onChange={set}/>
                                                                 <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted" type="button" ><i className={`las ${passwordicon ? "la-low-vision" : "la-eye"} align-middle fs-18`} onClick={() => setpasswordicon(!passwordicon)} /></button>
                                                             </div>
                                                         </div>
@@ -103,7 +104,7 @@ const SignInComponent = () => {
                                                             </label>
                                                         </div>
                                                         <div className="mt-2">
-                                                            <button disabled={loading} className="btn btn-primary w-100" type="submit">{loading ? "logging..." : "Log In"}</button>
+                                                            <button disabled={loading} className="btn btn-primary w-100" type="submit">{loading ? "Logging..." : "Log In"}</button>
                                                         </div>
                                                     </form>
                                                 </div>

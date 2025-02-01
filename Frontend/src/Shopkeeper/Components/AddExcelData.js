@@ -1,8 +1,25 @@
-import React from 'react'
+import React ,{useRef} from 'react'
 import Title from '../../CommonComponents/Title'
 import Footer from '../../CommonComponents/Footer'
-
-const AddExcelData = () => {
+import * as xlsx from "xlsx"          //globally fn ko import krne ke lie * use krnge
+const AddExcelData = ({fun}) => {      //props
+  const file=useRef()
+  const upload=(event)=>{
+    const filedata=event.target.files[0]
+    if(!filedata) return alert("Please Upload Excel File")
+    if(filedata.type!=="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") return alert("Only Excel File is allowed")
+    //filedata m excel data tha, fileReader se data ko read krnge as arraybuffer(excel),tym lega to onload lgaynge,xlsx ko install krke uska read fn call krnge or workbook name ke obj m rkh lenge,workbook m key =Sheetname(no of sheets),Sheets(data in sheets)
+    const reader=new FileReader()
+    reader.readAsArrayBuffer(filedata)                         // excel file ko read krne ke lie arraybuffer
+    reader.onload=function () {                                // time lera h to onload use kia
+      const workbook= xlsx.read(reader.result, {type:'buffer'})//reader obj m result name ki key thi 
+      const worksheetName=workbook.SheetNames[0]               //like sheet 1(ye 0th index pe hogi) ,sheet 2 
+      const worksheet=workbook.Sheets[worksheetName]           //data in each sheets
+      const array=xlsx.utils.sheet_to_json(worksheet)          //data bikhra hua hoga we use 
+      //data addexcel ke page se dlvaynge bt show review ke page se krnge so have to pass data (props)
+      fun(array)
+    }
+  }
   return (
     <div className="main-content">
   <div className="page-content">
@@ -16,9 +33,9 @@ const AddExcelData = () => {
                 <form>
                     <div className="dropzone mb-3">
                       <div className="fallback">
-                        <input name="file" type="file" multiple="multiple" hidden />
+                        <input ref={file} onChange={upload} name="file" type="file" multiple="multiple" hidden />
                       </div>
-                      <div style={{textAlign:"center"}} className="dz-message needsclick">
+                      <div onClick={()=>file.current.click()} style={{textAlign:"center"}} className="dz-message needsclick">
                         <div className="mb-3">
                           <i className="display-4 text-muted ri-upload-cloud-2-fill" />
                         </div>
