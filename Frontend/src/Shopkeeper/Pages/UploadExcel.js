@@ -9,7 +9,7 @@ const [data,setdata]=useState([])
     <div>
       <ShopkeeperHeader/>
       {
-        data && data.length!==0 ? <ReviewExcelData data={data}/> :<AddExcelData fun={setdata}/>         //data hua to review nhi to add excel data
+        data && data.length!==0 ? <ReviewExcelData data={data} setdata={setdata}/> :<AddExcelData fun={setdata}/>         //data hua to review nhi to add excel data
       }
      </div>
   )

@@ -251,4 +251,17 @@ Routes.post("/addmultipleproducts",checkuserdetails,async (req,resp)=>{
     }
 })
 
+
+
+Routes.get("/getallcitiesandstates",checkuserdetails,async(req,resp)=>{
+    try {
+     const response=await fetch("https://city-state.netlify.app/index.json")
+     const result=await response.json()
+     if(response.status===200 && result.length!==0) return HandleSuccessResponse(resp,202,"Cities & States fetched successfully",result)
+     return HandleSuccessResponse(resp,400,"Cities & States are not fetched successfully")
+    } catch (error) {
+     return HandleSuccessResponse(resp,500,"Internal Server error",null,error)
+    }
+  })
+  
 module.exports = Routes
