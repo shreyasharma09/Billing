@@ -57,7 +57,7 @@ Routes.post("/createshopkeeper", async (req, resp) => {
 Routes.post("/login", async (req, resp) => {
     try {
         const { email, password } = req.body
-        
+
         if (!email || !password) return HandleSuccessResponse(resp, 404, "Field is empty")
 
         const result = await User.findOne({ email })
@@ -69,7 +69,7 @@ Routes.post("/login", async (req, resp) => {
             const payload = { id: result._id }      //obj of id only for security
             const token = jwt.sign(payload, process.env.JSON_SECRET_KEY)     //id(payload),secret key==>token
 
-            return HandleSuccessResponse(resp, 202, "Login Successsfully", {token,role:result.role})
+            return HandleSuccessResponse(resp, 202, "Login Successsfully", { token, role: result.role })
         }
 
         return HandleSuccessResponse(resp, 401, "Invalid Password")
@@ -80,7 +80,7 @@ Routes.post("/login", async (req, resp) => {
     }
 })
 
-Routes.post("/enable", async (req, resp) => {
+Routes.put("/enable",checkuserdetails, async (req, resp) => {
     try {
         const { id } = req.body
         if (!id) return HandleSuccessResponse(resp, 404, "Please select the user first")
@@ -96,7 +96,7 @@ Routes.post("/enable", async (req, resp) => {
     }
 })
 
-Routes.post("/disable", async (req, resp) => {
+Routes.put("/disable",checkuserdetails, async (req, resp) => {
     try {
         const { id } = req.body
         if (!id) return HandleSuccessResponse(resp, 404, "Please select the user first")
@@ -106,31 +106,41 @@ Routes.post("/disable", async (req, resp) => {
 
         const result = await User.updateOne({ _id: id }, { $set: { service: false } })
         return HandleSuccessResponse(resp, 202, "Service is Disabled", result)
-
     } catch (error) {
         return HandleSuccessResponse(resp, 500, "Internal Server Error", null, error)
     }
 })
 
- Routes.post("/fetchuserdetails",checkuserdetails,async(req,resp)=>{
-        const payload={id:req.user._id}
-        const token= jwt.sign(payload,process.env.JSON_SECRET_KEY)
-        return HandleSuccessResponse(resp,202,"Login Successfully", {role:req.user.role, token})
- })
-
-
-
-
-
-Routes.post("/addproduct",checkuserdetails, async (req, resp) => {
+Routes.get("/getallusers",checkuserdetails,async(req,resp)=>{
     try {
-        const { name, company, model, description, price, discount, rate, tax , stock } = req.body
-        if (!name || !company || !model || !description || !price || !discount || !rate || !tax ) return HandleSuccessResponse(resp, 404, "Field is empty")
+        const users=await User.find({role:{$ne:"Superadmin"}}).select("-password")    //superadmin vale role ko chodke or pss b ni nikale ga
+        if(users.length===0) return HandleSuccessResponse(resp,400,"No user found")
+        return HandleSuccessResponse(resp,202,"Users fetched successfully",users)
+    } catch (error) {
+       return HandleSuccessResponse(resp,500,"Internal Server Error",null,error) 
+    }
+})
+
+Routes.post("/fetchuserdetails", checkuserdetails, async (req, resp) => {
+    const payload = { id: req.user._id }
+    const token = jwt.sign(payload, process.env.JSON_SECRET_KEY)
+    return HandleSuccessResponse(resp, 202, "Login Successfully", { role: req.user.role, token })
+})
+
+
+
+
+
+
+Routes.post("/addproduct", checkuserdetails, async (req, resp) => {
+    try {
+        const { name, company, model, description, price, discount, rate, tax, stock } = req.body
+        if (!name || !company || !model || !description || !price || !discount || !rate || !tax) return HandleSuccessResponse(resp, 404, "Field is empty")
 
         const existinguser = await Product.findOne({ model })
         if (existinguser) return HandleSuccessResponse(resp, 400, "Product of this model already exists")
 
-        const newproduct = await Product.create({userid : req.user._id, name, company, model, description, price, discount, rate, tax, stock})
+        const newproduct = await Product.create({ userid: req.user._id, name, company, model, description, price, discount, rate, tax, stock })
         return HandleSuccessResponse(resp, 201, "Product added Successfully", newproduct)
 
     } catch (error) {
@@ -138,9 +148,9 @@ Routes.post("/addproduct",checkuserdetails, async (req, resp) => {
     }
 })
 
-Routes.get("/getproducts",checkuserdetails, async (req, resp) => {
+Routes.get("/getproducts", checkuserdetails, async (req, resp) => {
     try {
-        const allproducts = await Product.find({ userid: req.user._id })         
+        const allproducts = await Product.find({ userid: req.user._id })
 
         if (allproducts.length === 0) return HandleSuccessResponse(resp, 404, "Your Product list is empty")
 
@@ -151,15 +161,15 @@ Routes.get("/getproducts",checkuserdetails, async (req, resp) => {
     }
 })
 
-Routes.delete("/deleteproduct/:id",checkuserdetails, async (req, resp) => {
+Routes.delete("/deleteproduct/:id", checkuserdetails, async (req, resp) => {
     try {
         const { id } = req.params;
         if (!id) return HandleSuccessResponse(resp, 404, "Plz select the product")
 
-        const existingproduct = await Product.findOne({ _id: id, userid: req.user._id }); 
+        const existingproduct = await Product.findOne({ _id: id, userid: req.user._id });
         if (!existingproduct) return HandleSuccessResponse(resp, 404, "This product is not found in your product list")
 
-        const result = await Product.deleteOne({ _id: id, userid: req.user._id }); 
+        const result = await Product.deleteOne({ _id: id, userid: req.user._id });
         return HandleSuccessResponse(resp, 202, "Product deleted successfully", result)
     }
     catch (error) {
@@ -167,7 +177,7 @@ Routes.delete("/deleteproduct/:id",checkuserdetails, async (req, resp) => {
     }
 });
 
-Routes.put("/updateproduct/:id",checkuserdetails, async (req, resp) => {
+Routes.put("/updateproduct/:id", checkuserdetails, async (req, resp) => {
     try {
         const { name, company, model, stock, description, price, discount, rate, tax } = req.body
         if (!name || !company || !model || !description || !price || !discount || !rate || !tax) return HandleSuccessResponse(resp, 404, "Field is empty")
@@ -189,5 +199,48 @@ Routes.put("/updateproduct/:id",checkuserdetails, async (req, resp) => {
         return HandleSuccessResponse(resp, 500, "Internal Server Error", null, error)
     }
 });
+
+
+const validateObjectKeys = (object, schema) => {
+    const schemaKeys = Object.keys(schema.paths).filter((key) => key !== '__v' && key !== '_id' && key !== 'createdat'); //schema ki keys===>schema.path==name,model,price(key)..
+    const objectKeys = Object.keys(object);        //object ki keys
+
+    for (const key of schemaKeys) {   //for of loop==>schema keys ki eyes
+      if (!object.hasOwnProperty(key) || object[key] === null || object[key] === '') return "The key "+key+" is missing or empty." //obj m schema ki key h y ni
+    }
+  
+    for (const key of objectKeys) {
+      if (!schemaKeys.includes(key)) return "The key "+key+" is not declared in the schema." // schemakey m objkey available h ya ni =check=include
+    }
+
+    return null;
+};
+
+Routes.post("/addmultipleproducts",checkuserdetails,async (req,resp)=>{
+    try {
+        const {items}=req.body            //array of obj
+        //check if item is array or not
+        if(!Array.isArray(items) || items.length===0) return HandleSuccessResponse(resp,400,"Invalid input.Provide an array of items")
+
+        const updateditems= items.map(item=>{return {...item,userid:req.user._id}})
+        const errors=[]
+        updateditems.map(async(item,index)=>{
+            const validationError = validateObjectKeys(item, Product.schema);
+            if (validationError) errors.push({ index, error: validationError })
+        
+            const existingproduct = await Product.findOne({ model: item.model });
+            if(existingproduct) errors.push({ index, error: "The modelNumber " +item.model+" already exists."})
+        })    
+    
+        if(errors.length > 0) return HandleSuccessResponse(resp,400,'Validation errors occurred.',null,errors);
+    
+        const result = await Product.insertMany(updateditems);
+        return HandleSuccessResponse(resp,201,'All products are added successfully',result)
+      
+
+    } catch (error) {
+        return HandleSuccessResponse(resp,500,'Internal Server Error',null,error)
+    }
+})
 
 module.exports = Routes
