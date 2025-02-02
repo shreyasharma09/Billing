@@ -188,7 +188,7 @@ Routes.delete("/deleteproduct/:id", checkuserdetails, async (req, resp) => {
 Routes.put("/updateproduct/:id", checkuserdetails, async (req, resp) => {
     try {
         const { name, company, model, stock, description, price, discount, rate, tax } = req.body
-        if (!name || !company || !model || !description || !price || !discount || !rate || !tax) return HandleSuccessResponse(resp, 404, "Field is empty")
+        if (!name || !company || !model || !description || !price || !discount || !rate || !tax || !stock) return HandleSuccessResponse(resp, 404, "Field is empty")
 
         const { id } = req.params;
         if (!id) return HandleSuccessResponse(resp, 404, "Plz select the product")
@@ -197,7 +197,7 @@ Routes.put("/updateproduct/:id", checkuserdetails, async (req, resp) => {
         if (!existingproduct) return HandleSuccessResponse(resp, 404, "This product is not found in your product list")
 
         const response = await Product.findOne({ model });
-        if (response) return HandleSuccessResponse(resp, 400, "Product of this model is already exists in your product list")
+        if (response && response._id.toString()!==id) return HandleSuccessResponse(resp, 400, "Product of this model is already exists in your product list")
 
         const updatedproduct = await Product.updateOne({ _id: id }, {
             $set: { name, company, model, description, price, discount, rate, tax, stock }
