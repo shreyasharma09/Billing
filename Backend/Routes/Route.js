@@ -14,10 +14,10 @@ Routes.get("/HealthCheckApi", async (req, resp) => {
     return HandleSuccessResponse(resp, 200, "Server Health is OK")
 })
 
-Routes.post("/verifyshopkeeper", async (req, resp) => {
+Routes.post("/verifyuser",checkuserdetails, async (req, resp) => {
     try {
-        const { name, phone, email, password, address, state, city } = req.body
-        if (!name || !phone || !email || !password || !address || !state || !city) return HandleSuccessResponse(resp, 404, "Field is empty")
+        const { name, phone, email, password, address, state, city ,role} = req.body
+        if (!name || !phone || !email || !password || !address || !state || !state==="None" || !city || !city==="None" || !role) return HandleSuccessResponse(resp, 404, "Field is empty")
         const existinguser = await User.findOne({ email })
         if (existinguser) return HandleSuccessResponse(resp, 400, "Account already exists")
 
@@ -32,10 +32,10 @@ Routes.post("/verifyshopkeeper", async (req, resp) => {
     }
 })
 
-Routes.post("/createshopkeeper", async (req, resp) => {
+Routes.post("/createuser",checkuserdetails, async (req, resp) => {
     try {
-        const { name, phone, email, password, address, state, city, otp } = req.body
-        if (!name || !phone || !email || !password || !address || !state || !city) return HandleSuccessResponse(resp, 404, "Field is empty")
+        const { name, phone, email, password, address, state, city, role, otp } = req.body
+        if (!name || !phone || !email || !password || !address || !state || !state==="None" || !city || !city==="None" || !role) return HandleSuccessResponse(resp, 404, "Field is empty")
         if (!otp) return HandleSuccessResponse(resp, 404, "Enter the otp")
 
         const existinguser = await User.findOne({ email })
@@ -45,7 +45,7 @@ Routes.post("/createshopkeeper", async (req, resp) => {
         const response = verifyotp(email, otp)
         if (!response.status) return HandleSuccessResponse(resp, 404, response.message)
 
-        const result = await Shopkeeper.create({ name, phone, email, password, address, state, city })
+        const result = await User.create({ name, phone, email, password, address, state, city, role })
 
         return HandleSuccessResponse(resp, 201, "Acc created successfully", result)
 
@@ -127,7 +127,15 @@ Routes.post("/fetchuserdetails", checkuserdetails, async (req, resp) => {
     return HandleSuccessResponse(resp, 202, "Login Successfully", { role: req.user.role, token })
 })
 
-
+Routes.get("/getallshopkeepers",checkuserdetails,async(req,resp)=>{
+    try {
+        const result=await Shopkeeper.find().select("email_id")   
+        if(result.length===0) return HandleSuccessResponse(resp,400,"No Shopkeeper found")
+        return HandleSuccessResponse(resp,202,"Shopkeeper fetched successfully",result)
+    } catch (error) {
+       return HandleSuccessResponse(resp,500,"Internal Server Error",null,error) 
+    }
+})
 
 
 
