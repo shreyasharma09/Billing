@@ -6,6 +6,8 @@ const CreateAccountModal = (props) => {
     const [loading, setloading] = useState(false)
     const [obj, setobj] = useState({})
     const [shopkeepers, setshopkeepers] = useState([])
+    console.log(shopkeepers);
+    
     const [otp, setotp] = useState('')
     const [data, setdata] = useState({})     //for city state
     const navigate = useNavigate()

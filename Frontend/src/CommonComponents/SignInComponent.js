@@ -5,7 +5,6 @@ const SignInComponent = () => {
     const [obj, setobj] = useState({})
     const [loading, setloading] = useState(false)
     const [rememberme, setrememberme] = useState(false)
-   
     const navigate = useNavigate()
 
     const set = (event) => setobj({ ...obj, [event.target.name]: event.target.value })
@@ -34,7 +33,27 @@ const SignInComponent = () => {
             alert("Something went wrong .Try again later")
         }
     }
-
+    const fetchuserdetails=async(token,remember)=>{
+        try {
+           const response= await fetch("http://localhost:3010/api/fetchuserdetails",{
+               method:"post",
+               headers:{
+                   "Content-Type":"application/json",
+                   "Authorization":token
+               }
+           })
+           const result=await response.json()
+           alert(result?.message)
+           if(response.status===202){
+            localStorage.clear()
+            localStorage.setItem("Userinfo",JSON.stringify({"Authorization":result.data.token,"Rememberme":remember}))
+            navigate("/"+result?.data?.role,{replace:true})
+           }
+        } catch (error) {
+           console.log(error);
+           alert("Something went wrong. Try again later.")
+        }
+       }
     useEffect(() => {
         const getdata = async () => {                   //getdata fn created bcz fnc takes time bt useeffect works page pe aate hi so we can't make it async so take another fn in useeffect
             const userinfo = JSON.parse(localStorage.getItem("Userinfo"))
@@ -43,28 +62,7 @@ const SignInComponent = () => {
         getdata()
     }, [])
 
-    const fetchuserdetails = async (token, remember) => {
-        try {
-            const response = await fetch("http://localhost:3010/api/fetchuserdetails", {
-                method: "post",
-                headers: {                                            //only token pass krna h or token passes in only headers not body
-                    "Content-Type": "application/json",
-                    "Authorization": token
-                }
-            })
-            const result = response.json()
-            alert(result?.message)
-            if (result.status === 202) {
-                localStorage.clear()
-                localStorage.setItem("Userinfo", JSON.stringify({ "Authorization": result.data.token, "Rememberme": remember }))
-                navigate("/" + result?.data?.role, { replace: true })
-            }
-        } catch (error) {
-            console.log(error);
-            alert("Something went wrong.Try again later")
-
-        }
-    }
+   
 
     return (
         <div className="account-pages">
