@@ -3,6 +3,7 @@ const { generateotp, verifyotp } = require("../Services/OtpService/OtpService")
 const { otptoemailforverification } = require("../Services/EmailService/EmailService")
 const { User, Shopkeeper , Executive } = require("../Model/UserModel/UserModel")
 const Product = require("../Model/ProductModel/ProductModel")
+const Customer= require("../Model/CustomerModel/CustomerModel")
 require("dotenv").config()
 const HandleSuccessResponse = require("../HandleResponse/HandleResponse")
 const jwt = require("jsonwebtoken")                     //install it | helps in login | helps to secure id in an another obj called payload | make string of 30-40 words  |Format--> _._._  ==>1) id(in hash string format) 2)security 3)secret key which is defined by us
@@ -333,4 +334,28 @@ Routes.post("/verifyexecutive",checkuserdetails,async (req, resp) => {
   });
   
   
+
+Routes.post("/createcustomer",checkuserdetails,async(req,resp)=>{
+    try {
+        const{name,phone,address}=req.body
+        if(!name || !phone || !address) return HandleSuccessResponse(resp,404,"Field is empty")
+        const existingcustomer=await Customer.findOne({phone,customerof:req.user._id})
+        if (existingcustomer) return HandleSuccessResponse(resp,400,"Customer already exists")
+        const newCustomer=await Customer.create({name,phone,address,customerof:req.user._id})
+        return HandleSuccessResponse(resp,201,"Customer created successfully",newCustomer)
+    } catch (error) {
+        return HandleSuccessResponse(resp,500,"Internal Server Error",null,error)
+    }
+})
+
+Routes.get("/getallcustomers",checkuserdetails,async(req,resp)=>{
+    try {
+        const existingcustomers=await Customer.find({customerof:req.user._id})
+        if(!existingcustomers || existingcustomers.length===0) return HandleSuccessResponse(resp,404,"Customers list is empty")
+        return HandleSuccessResponse(resp,202,"Customers fetched successfully",existingcustomers)
+    } catch (error) {
+        return HandleSuccessResponse(resp,500,"Internal Server Error",null,error)
+    }
+})
+
 module.exports = Routes
