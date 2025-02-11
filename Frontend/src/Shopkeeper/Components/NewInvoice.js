@@ -1,14 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Title from '../../CommonComponents/Title'
 import Footer from '../../CommonComponents/Footer'
 import AddItemModal from './AddItemModal'
 import ChooseCustomerModal from './ChooseCustomerModal'
+import { useNavigate } from 'react-router-dom'
 
-const NewInvoice = () => {
+const NewInvoice = ({setinvoices}) => {
   const[AddItemToggle,setAddItemToggle] = useState(false)
   const[customer,setcustomer]=useState({})
-  const[items,setitems]=useState([])
+  const[items,setitems]=useState([])    //jo hm choose kr rhe h item frontend se
+  const[result,setresult]=useState({})       //for grandtotal,subtotal,totaltax,totaldiscount
   const[ChooseCustomerToggle,setChooseCustomerToggle] = useState(false)
+  const navigate=useNavigate()
+  const[loading,setloading]=useState(false)
+
   const addquantity=(obj)=>{
     obj.quantity+=1
     setitems(items.map(item=>item._id===obj._id?obj:item))
@@ -21,12 +26,60 @@ const NewInvoice = () => {
       setitems(items.map(item=>item._id===obj._id?obj:item))
     }
   }
-  const changediscount=(updateddiscount,obj)=>{
+  const changediscount=(updateddiscount,obj)=>{ //updateddiscount m event aara h mtlb type kia hua
     obj.discount=updateddiscount
     setitems(items.map(item=>item._id===obj._id?obj:item))
   }
   const remove=(obj)=>{
-    setitems(items.filter(item=>item._id!==obj._id))
+    setitems(items.filter(item=>item._id!==obj._id))  //jo id match nhi hui vo return ho jaygi..matched nhi show hogi
+  }
+
+  useEffect(()=>{
+        let subtotal=0
+        let totaltax=0
+        let totaldiscount=0
+        items?.map(item=>{
+            subtotal+=item.quantity*item.price
+            totaltax+=item.quantity*(item.price*item.tax)/100
+            totaldiscount+=item.quantity*(item.price*item.discount)/100
+        })
+        const grandtotal=subtotal+totaltax-totaldiscount
+        setresult({grandtotal,subtotal,totaltax,totaldiscount});
+  },[items])
+
+  const submit=async(e)=>{
+    try {
+        e.preventDefault()
+        setloading(true)
+        const userinfo=JSON.parse(localStorage.getItem("Userinfo"))
+        if(!userinfo || !userinfo.Authorization){
+            localStorage.clear();
+            alert("Unauthorised user")
+            window.history.replaceState(null,null,"/")
+            return navigate("/",{replace:true})
+        }  
+        if(!customer._id) return alert("Choose your Customer")
+        if(items.length===0) return alert("Add products to your invoice")
+        const ordereditems=items.map(({name,model,price,tax,description,company,discount,rate,quantity}) =>({name,model,price,tax,description,company,discount,rate,quantity}))  //destruct for filtering 
+        const response=await fetch("http://localhost:3010/api/createInvoice/"+customer._id,{
+            method:"post",
+            body:JSON.stringify({ordereditems}),
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization":userinfo.Authorization
+            }
+        })     
+        const result=await response.json()
+        alert(result?.message)
+        if(response.status===201){
+            setinvoices(result.data)
+        }
+    } catch (error) {
+        console.log(error);
+        alert("Something went wrong. Please try again")
+    } finally{
+        return setloading(false)
+    }
   }
   return (
   <div className="main-content">
@@ -36,7 +89,7 @@ const NewInvoice = () => {
             <div className="row justify-content-center">
                 <div className="col-xxl-9">
                     <div className="card">
-                        <form className="needs-validation" noValidate id="invoice_form">
+                        <form onSubmit={submit} className="needs-validation" noValidate id="invoice_form">
                             <div className="card-body border-bottom border-bottom-dashed p-4">
                                 <div className="row">
                                     <div className="col-lg-6">
@@ -55,7 +108,7 @@ const NewInvoice = () => {
                                             <input type="text" value={customer?.name?customer?.name:""} className="form-control bg-light border-0" id="billingName" placeholder="Full Name" required readOnly={true} />
                                         </div>
                                         <div className="mb-2">
-                                            <input type="text" value={customer?.address?customer?.address:""} className="form-control bg-light border-0" data-plugin="cleave-phone" id="billingAddress" placeholder="Address" readOnly={true} required />
+                                        <input type="text" value={customer?.address?customer?.address:""} className="form-control bg-light border-0" data-plugin="cleave-phone" id="billingPhoneno" placeholder="Address" readOnly={true} required />
                                         </div>
                                         <div className="mb-2">
                                             <input type="text" value={customer?.phone?customer?.phone:""} className="form-control bg-light border-0" data-plugin="cleave-phone" id="billingPhoneno" placeholder="Phone" readOnly={true} required />
@@ -120,19 +173,19 @@ const NewInvoice = () => {
                                                         <tbody>
                                                             <tr>
                                                                 <th scope="row">Sub Total</th>
-                                                                <td style={{ width: 150 }}><input type="text" className="form-control bg-light border-0" id="cart-subtotal" placeholder="$0.00" readOnly /></td>
+                                                                <td style={{ width: 150 }}><input type="number" value={result?.subtotal?result?.subtotal:""} className="form-control bg-light border-0" id="cart-subtotal" readOnly /></td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row">Total Tax</th>
-                                                                <td><input type="text" className="form-control bg-light border-0" id="cart-tax" placeholder='₹0.00' /></td>
+                                                                <td><input type="number" value={result?.totaltax?result?.totaltax:""} className="form-control bg-light border-0" id="cart-tax" readOnly/></td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row">Total Discount</th>
-                                                                <td><input type="text" className="form-control bg-light border-0" id="cart-discount" placeholder='₹0.00' /></td>
+                                                                <td><input type="number" value={result?.totaldiscount?result?.totaldiscount:""} className="form-control bg-light border-0" id="cart-discount" readOnly/></td>
                                                             </tr>
                                                             <tr className="border-top border-top-dashed">
                                                                 <th scope="row">Total Amount</th>
-                                                                <td><input type="text" className="form-control bg-light border-0" id="cart-total" placeholder='₹0.00' /></td>
+                                                                <td><input type="number" value={result?.grandtotal?result?.grandtotal:""} className="form-control bg-light border-0" id="cart-total" readOnly/></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -143,11 +196,11 @@ const NewInvoice = () => {
                                 </div>
                                 <div className="mt-4">
                                     <label htmlFor="exampleFormControlTextarea1" className="form-label text-muted text-uppercase fw-semibold">NOTES</label>
-                                    <textarea className="form-control alert alert-info" id="exampleFormControlTextarea1" placeholder="Notes" rows={2} required defaultValue={"All accounts are to be paid within 7 days from receipt of invoice. To be paid by cheque or credit card or direct payment online. If account is not paid within 7 days the credits details supplied as confirmation of work undertaken will be charged the agreed quoted fee noted above."} />
+                                    <textarea className="form-control alert alert-info" id="exampleFormControlTextarea1" readOnly={true} placeholder="Notes" rows={2} required defaultValue={"All accounts are to be paid within 7 days from receipt of invoice. To be paid by cheque or credit card or direct payment online. If account is not paid within 7 days the credits details supplied as confirmation of work undertaken will be charged the agreed quoted fee noted above."} />
                                 </div>
                                 <div className="hstack gap-2 justify-content-end d-print-none mt-4">
-                                    <button type="submit" className="btn btn-info"><i className="ri-printer-line align-bottom me-1" /> Save Invoice</button>
-                                    <a className="btn btn-danger"><i className="ri-send-plane-fill align-bottom me-1" />Discard</a>
+                                    <button type="submit" disabled={loading} className="btn btn-info"><i className="ri-printer-line align-bottom me-1" />{loading?"Saving...":"Save Invoice"}</button>
+                                    <a className="btn btn-danger" onClick={()=>navigate("/Shopkeeper")}><i className="ri-send-plane-fill align-bottom me-1" />Discard</a>
                                 </div>
                             </div>
                         </form>

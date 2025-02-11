@@ -440,6 +440,30 @@ async function generateInvoiceNumber() {
   })
 
 
+  Routes.get("/getCustomer/:id",checkuserdetails,async(req,resp)=>{   //for showing in invoice ..have to fetch the address
+    try {
+      const {id}=req.params
+      if(!id || !mongoose.isValidObjectId(id)) return HandleSuccessResponse(resp,404,"Customer is not valid")
+        
+      const existingCustomer=await Customer.findOne({_id:id,customerof:req.user._id})
+      if(!existingCustomer) return HandleSuccessResponse(resp,404,"Customer is not found in your list")
+      return HandleSuccessResponse(resp,202,"Customer fetched successfully",existingCustomer)
+    } catch (error) {
+      return HandleSuccessResponse(resp,500,"Internal Server Error",null,error)
+    }
+  })
+  
+  Routes.get("/getShopkeeper",checkuserdetails,async(req,resp)=>{        //for showing in invoice ..have to fetch the details
+    try {
+      const existingShopkeeper=await Shopkeeper.findOne({_id:req.user._id}).select("-password -_id")
+      if(!existingShopkeeper) return HandleSuccessResponse(resp,404,"Shopkeeper is not found in your list")
+      return HandleSuccessResponse(resp,202,"Shopkeeper fetched successfully",existingShopkeeper)
+    } catch (error) {
+      return HandleSuccessResponse(resp,500,"Internal Server Error",null,error)
+    }
+  })
+
+
   Routes.get("/getalltransactions/:id",checkuserdetails,async(req,resp)=>{
     try {
       const {id} =req.params
@@ -449,10 +473,10 @@ async function generateInvoiceNumber() {
       if(!existingCustomer) return HandleSuccessResponse(resp,404,"Customer not found")
   
       const result=await Transaction.find({shopkeeperId:req.user._id,customerId:id})
-      if(!result || result.length === 0) return HandleSuccessResponse(response,404,"Transaction list is empty")
+      if(!result || result.length === 0) return HandleSuccessResponse(resp,404,"Transaction list is empty")
       return HandleSuccessResponse(resp,202,"Transactions fetched successfully",result)
     } catch (error) {
-      return HandleSuccessResponse(response,500,"Internal Server Error",null,error)
+      return HandleSuccessResponse(resp,500,"Internal Server Error",null,error)
     }
   })
 
