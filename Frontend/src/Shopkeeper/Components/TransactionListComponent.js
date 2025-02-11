@@ -78,13 +78,13 @@ return(
                   <tbody>
                     { transactions && transactions.length!==0 && transactions?.map((transaction,index) => (
                         <tr key={index}>
-                          <td>{transaction.InvoiceNo}</td>
+                          <td>{transaction.InvoiceNo || transaction.RecieptNo}</td>
                           <td>{new Date(transaction.createdAt).toLocaleDateString()}</td>
                           <td>{transaction.paymentType}</td>
-                          <td>₹{transaction.TotalAmount}/-</td>
-                          <td>₹{transaction.TotalTax}/-</td>
-                          <td>₹{transaction.TotalDiscount}/-</td>
-                          <td>₹{transaction.TotalProfit}/-</td>
+                          <td>₹{transaction.TotalAmount || transaction.payment}/-</td>
+                          <td>{transaction.TotalTax ? `₹ ${transaction.TotalTax} /-`: " - "}</td>
+                          <td>{transaction.TotalDiscount ? `₹${transaction.TotalDiscount}/-`:" - " }</td>
+                          <td>{transaction.TotalProfit ? `₹${transaction.TotalProfit}/-` :" - "}</td>
                         </tr>
                       ))
                     }

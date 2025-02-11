@@ -5,7 +5,7 @@ const { User, Shopkeeper , Executive } = require("../Model/UserModel/UserModel")
 const Product = require("../Model/ProductModel/ProductModel")
 const Customer= require("../Model/CustomerModel/CustomerModel")
 const OrderedItems= require("../Model/OrderedItemModel/OrderedItemModel")
-const { Invoice, Transaction } = require("../Model/TransactionModel/TransactionModel");
+const { Invoice, Transaction, Payment } = require("../Model/TransactionModel/TransactionModel");
 require("dotenv").config()
 const { default: mongoose } = require("mongoose");
 const HandleSuccessResponse = require("../HandleResponse/HandleResponse")
@@ -475,6 +475,27 @@ async function generateInvoiceNumber() {
       const result=await Transaction.find({shopkeeperId:req.user._id,customerId:id})
       if(!result || result.length === 0) return HandleSuccessResponse(resp,404,"Transaction list is empty")
       return HandleSuccessResponse(resp,202,"Transactions fetched successfully",result)
+    } catch (error) {
+      return HandleSuccessResponse(resp,500,"Internal Server Error",null,error)
+    }
+  })
+
+  Routes.post("/addpayment/:id",checkuserdetails,async(req,resp)=>{
+    try {
+      const {RecieptNo,payment,Description}=req.body
+      if(!RecieptNo || !payment) return HandleSuccessResponse(resp,404,"Field is Empty")
+        
+      const {id}=req.params
+      if(!id ||!mongoose.isValidObjectId(id)) return HandleSuccessResponse(resp,404,"Customer is not valid")
+      
+      const existingCustomer=await Customer.findOne({_id:id,customerof:req.user._id})
+      if(!existingCustomer) return HandleSuccessResponse(resp,404,"Customer is not found in your list")
+
+      existingCustomer.balance-=payment   //payment add ki h mtlb customer n paise die h to uske existing balance m s payment km honi chahiye
+      const updatedCustomer=await Customer.updateOne({_id:id,customerof:req.user._id},{$set:{balance:existingCustomer.balance}})
+     
+      const result=await Payment.create({shopkeeperId:req.user._id,customerId:id,RecieptNo,payment,Description})
+      return HandleSuccessResponse(resp,201,"Customer updated successfully",{updatedCustomer,result})
     } catch (error) {
       return HandleSuccessResponse(resp,500,"Internal Server Error",null,error)
     }
