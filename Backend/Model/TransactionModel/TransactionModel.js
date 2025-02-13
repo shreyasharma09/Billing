@@ -55,6 +55,10 @@ const InvoiceSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    Subtotal:{
+      type: Number,
+      required: true,
+  },
 });
 
 const PaymentSchema = new mongoose.Schema({
