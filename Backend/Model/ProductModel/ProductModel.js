@@ -1,7 +1,5 @@
 const mongoose=require("mongoose")
-
 require("dotenv").config()      
-
 const productschema= new mongoose.Schema({
     userid:{
         type: mongoose.Schema.Types.ObjectId,
@@ -46,6 +44,6 @@ const productschema= new mongoose.Schema({
         default:0
     }
 })
-
+productschema.index({ userid: 1, model: 1 }, { unique: true }); //us ek userid p ek hi model 
 const Product=mongoose.model(process.env.MONGODB_PRODUCT_COLLECTION,productschema)
 module.exports=Product

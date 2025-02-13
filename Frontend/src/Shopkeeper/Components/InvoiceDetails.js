@@ -174,7 +174,7 @@ const InvoiceDetails = ({data}) => {
                                                 <tbody>
                                                     <tr>
                                                         <td>Sub Total</td>
-                                                        <td className="text-end">₹{data?.ordereditems?.reduce((acc,obj)=>acc+obj.price,0)}</td>
+                                                        <td className="text-end">₹{data?.result?.Subtotal}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Estimated Tax (+)</td>

@@ -11,7 +11,7 @@ const CustomerSchema= new mongoose.Schema({
         required:true
     },
     phone:{
-        type:Number,
+        type:String, //bcz if there's 0 at last number does'nt count bt string does
         required:true
     },
     address:{
@@ -27,5 +27,6 @@ const CustomerSchema= new mongoose.Schema({
         default:Date.now
     }
 })
+CustomerSchema.index({ customerof: 1, phone: 1 }, { unique: true });  //in mongoshell ==> db.customers.dropindex("model_1")
 const Customer=mongoose.model(process.env.MONGODB_CUSTOMER_COLLECTION,CustomerSchema)
 module.exports=Customer

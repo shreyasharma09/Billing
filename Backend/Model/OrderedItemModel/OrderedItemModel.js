@@ -1,4 +1,6 @@
 const mongoose= require('mongoose')
+require("dotenv").config()  
+
 const OrderedItemSchema=new mongoose.Schema({
     name: {
         type: String,
