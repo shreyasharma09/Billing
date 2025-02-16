@@ -116,8 +116,9 @@ Routes.put("/disable",checkuserdetails, async (req, resp) => {
 })
 
 Routes.get("/getallusers",checkuserdetails,async(req,resp)=>{
-    try {
-        const users=await User.find({role:{$ne:"Superadmin"}}).select("-password")    //superadmin vale role ko chodke or pss b ni nikale ga
+    try {    // aggregate fn randomly pick/find...
+        const users = await User.aggregate([{ $match: { role: "Shopkeeper" } },{ $lookup: {from: process.env.MONGODB_USER_COLLECTION ,localField: "_id",foreignField: "executiveof",as: "executives"}}, {$project: {password: 0, "executives.password": 0}}]).exec(); //password :shopkeeper k pss 0 means nhi nikalna
+        // const users=await User.find({role:{$ne:"Superadmin"}}).select("-password")    //superadmin vale role ko chodke or pss b ni nikale ga
         if(users.length===0) return HandleSuccessResponse(resp,400,"No user found")
         return HandleSuccessResponse(resp,202,"Users fetched successfully",users)
     } catch (error) {

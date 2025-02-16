@@ -38,7 +38,7 @@ const BaseSchema = new mongoose.Schema(                 //commom schema of execu
       role: {
         type: String,
         required: true,
-        enum: ["shopkeeper","executive"], // Restrict values to "shopkeeper" or "executive"
+        enum: ["Shopkeeper","Executive"], // Restrict values to "shopkeeper" or "executive"
       },
       createdAt: {
         type: Date,
@@ -48,7 +48,7 @@ const BaseSchema = new mongoose.Schema(                 //commom schema of execu
     { discriminatorKey: "role", collection: `${process.env.MONGODB_USER_COLLECTION}` } // Add a discriminator key for role-based distinction
   );
 
-const User = mongoose.model(process.env.MONGODB_USER_COLLECTION , BaseSchema);
+const User = mongoose.model(process.env.MONGODB_USER_COLLECTIN , BaseSchema);
 
 //For Shopkeeper purpose
 const ShopkeeperSchema = new mongoose.Schema({
@@ -58,7 +58,8 @@ const ShopkeeperSchema = new mongoose.Schema({
 //For Executive purpose
 const ExecutiveSchema = new mongoose.Schema({
   executiveof:{
-    type:String,
+    type:mongoose.Schema.Types.ObjectId,
+    ref: process.env.MONGODB_USER_COLLECTION,
     required:true
   }
 });

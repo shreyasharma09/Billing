@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Footer from "../../CommonComponents/Footer"
 import Title from "../../CommonComponents/Title"
-import axios from "axios"
+import axios from "axios"   //install it
 const DashboardComponent = () => {
   const navigate=useNavigate()
   const[data,setdata]=useState({})
