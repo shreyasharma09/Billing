@@ -98,7 +98,7 @@ const DashboardComponent = () => {
                 <div className="col-lg-4 mini-widget pb-3 pb-lg-0">
                   <div className="d-flex align-items-end">
                     <div className="flex-grow-1">
-                      <h2 className="mb-0 fs-24"><span className="counter-value" data-target={197}>₹{data?.totalTax}/-</span></h2>
+                      <h2 className="mb-0 fs-24"><span className="counter-value" data-target={197}>₹{data?.totalTax?.toFixed(2)}/-</span></h2>
                       <h5 className="text-muted fs-16 mt-2 mb-0">Tax collected</h5>
                       <p className="text-muted mt-3 pt-1 mb-0 text-truncate"> <span className="badge bg-info me-1">This year</span></p>
                     </div>
@@ -107,7 +107,7 @@ const DashboardComponent = () => {
                 <div className="col-lg-4 mini-widget py-3 py-lg-0">
                   <div className="d-flex align-items-end">
                     <div className="flex-grow-1">
-                      <h2 className="mb-0 fs-24"><span className="counter-value" data-target={634}>₹{data?.totalDiscount}/-</span></h2>
+                      <h2 className="mb-0 fs-24"><span className="counter-value" data-target={634}>₹{data?.totalDiscount?.toFixed(2)}/-</span></h2>
                       <h5 className="text-muted fs-16 mt-2 mb-0">Discount Given</h5>
                       <p className="text-muted mt-3 pt-1 mb-0 text-truncate"> <span className="badge bg-danger me-1">This year</span></p>
                     </div>
@@ -116,7 +116,7 @@ const DashboardComponent = () => {
                 <div className="col-lg-4 mini-widget pt-3 pt-lg-0">
                   <div className="d-flex align-items-end">
                     <div className="flex-grow-1">
-                      <h2 className="mb-0 fs-24"><span className="counter-value" data-target={512}>₹{data?.totalProfit}/-</span></h2>
+                      <h2 className="mb-0 fs-24"><span className="counter-value" data-target={512}>₹{data?.totalProfit?.toFixed(2)}/-</span></h2>
                       <h5 className="text-muted fs-16 mt-2 mb-0">Profit Generated</h5>
                       <p className="text-muted mt-3 pt-1 mb-0 text-truncate"> <span className="badge bg-info me-1">This year</span></p>
                     </div>
@@ -148,13 +148,13 @@ const DashboardComponent = () => {
                 <div className="col-6 border-end">
                   <div className="my-1">
                     <p className="text-muted text-truncate mb-2">Amount Received</p>
-                    <h4 className="mt-2 mb-0 fs-20">₹{data?.totalPayment}/-</h4>
+                    <h4 className="mt-2 mb-0 fs-20">₹{data?.totalPayment?.toFixed(2)}/-</h4>
                   </div>
                 </div>
                 <div className="col-6">
                   <div className="my-1">
                     <p className="text-muted text-truncate mb-2">Sales Generated</p>
-                    <h4 className="mt-2 mb-0 fs-20">₹{data?.totalSales}/-</h4>
+                    <h4 className="mt-2 mb-0 fs-20">₹{data?.totalSales?.toFixed(2)}/-</h4>
                   </div>
                 </div>
               </div>
@@ -199,8 +199,8 @@ const DashboardComponent = () => {
                       <td><p className="mb-0">{invoice?.InvoiceNo}</p></td>
                       <td><a href='#' className="text-body align-middle">{invoice?.customerId?.name}</a></td>
                       <td>{new Date(invoice?.createdAt).toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"})}</td>
-                      <td><span className="badge bg-success-subtle text-success p-2">₹{invoice?.TotalAmount}/-</span></td>
-                      <td><span className="badge bg-info-subtle text-info p-2">₹{invoice?.TotalProfit}/-</span></td>
+                      <td><span className="badge bg-success-subtle text-success p-2">₹{invoice?.TotalAmount?.toFixed(2)}/-</span></td>
+                      <td><span className="badge bg-info-subtle text-info p-2">₹{invoice?.TotalProfit?.toFixed(2)}/-</span></td>
                     </tr>
                         )
                       })
