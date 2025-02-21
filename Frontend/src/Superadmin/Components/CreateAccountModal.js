@@ -13,7 +13,7 @@ const CreateAccountModal = (props) => {
     const navigate = useNavigate()
     const getallshopkeepers = async (token) => {
         try {
-            const response = await fetch("https://quickbill-57hy.onrender.com/api/getallshopkeepers", {
+            const response = await fetch("https://quickbill-1.onrender.com/api/getallshopkeepers", {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": token
@@ -29,7 +29,7 @@ const CreateAccountModal = (props) => {
     }
     const getallcityandstate = async (token) => {
         try {
-            const response = await fetch("https://quickbill-57hy.onrender.com/api/getallcitiesandstates", {
+            const response = await fetch("https://quickbill-1.onrender.com/api/getallcitiesandstates", {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": token
@@ -67,7 +67,7 @@ const CreateAccountModal = (props) => {
                 window.history.replaceState(null, null, "/")
                 return navigate("/", { replace: true })
             }
-            const response = await fetch("https://quickbill-57hy.onrender.com/api/verifyuser", {
+            const response = await fetch("https://quickbill-1.onrender.com/api/verifyuser", {
                 method: "post",
                 body: JSON.stringify(obj),
                 headers: {
@@ -97,7 +97,7 @@ const CreateAccountModal = (props) => {
                 window.history.replaceState(null, null, "/")
                 return navigate("/", { replace: true })
             }
-            const response = await fetch("https://quickbill-57hy.onrender.com/api/createuser", {
+            const response = await fetch("https://quickbill-1.onrender.com/api/createuser", {
                 method: "post",
                 body: JSON.stringify({ ...obj, otp }),
                 headers: {

@@ -14,7 +14,7 @@ const ManageExecutive = () => {
     const usersperpage=5
     const getallexecutives=async(token)=>{
         try {
-            const response=await fetch("https://quickbill-57hy.onrender.com/api/getallexecutives",{
+            const response=await fetch("https://quickbill-1.onrender.com/api/getallexecutives",{
                 headers:{
                     "Content-Type":"application/json",
                     "Authorization":token
@@ -56,7 +56,7 @@ const ManageExecutive = () => {
                 window.history.replaceState(null,null,"/")
                 return navigate("/",{replace:true})
             }
-            const response=await fetch("https://quickbill-57hy.onrender.com/api/enableexecutive",{
+            const response=await fetch("https://quickbill-1.onrender.com/api/enableexecutive",{
                 method:"put",
                 body:JSON.stringify({id}),
                 headers:{
@@ -81,7 +81,7 @@ const ManageExecutive = () => {
                 window.history.replaceState(null,null,"/")
                 return navigate("/",{replace:true})
             }
-            const response=await fetch("https://quickbill-57hy.onrender.com/api/disableexecutive",{
+            const response=await fetch("https://quickbill-1.onrender.com/api/disableexecutive",{
                 method:"put",
                 body:JSON.stringify({id}),
                 headers:{

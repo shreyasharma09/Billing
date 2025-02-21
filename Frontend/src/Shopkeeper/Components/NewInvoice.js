@@ -61,7 +61,7 @@ const NewInvoice = ({setinvoices}) => {
         if(!customer._id) return alert("Choose your Customer")
         if(items.length===0) return alert("Add products to your invoice")
         const ordereditems=items.map(item =>({id:item._id,quantity:item.quantity}))
-        const response=await fetch("https://quickbill-57hy.onrender.com/api/createInvoice/"+customer._id,{
+        const response=await fetch("https://quickbill-1.onrender.com/api/createInvoice/"+customer._id,{
             method:"post",
             body:JSON.stringify({ordereditems}),
             headers:{

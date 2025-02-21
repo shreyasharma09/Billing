@@ -17,7 +17,7 @@ const TransactionListComponent = () => {
   },[])
   const getalltransactions=async(token,id)=>{
     try {
-        const response=await fetch("https://quickbill-57hy.onrender.com/api/getalltransactions/"+id,{
+        const response=await fetch("https://quickbill-1.onrender.com/api/getalltransactions/"+id,{
             headers:{
                 "Content-Type":"application/json",
                 "Authorization":token

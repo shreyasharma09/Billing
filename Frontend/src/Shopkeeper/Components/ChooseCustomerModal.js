@@ -7,7 +7,7 @@ const ChooseCustomerModal = (props) => {
     const navigate=useNavigate()
     const getallcustomers=async(token)=>{
         try {
-            const response=await fetch("https://quickbill-57hy.onrender.com/api/getallcustomers",{
+            const response=await fetch("https://quickbill-1.onrender.com/api/getallcustomers",{
                 headers:{
                     "Content-Type":"application/json",
                     "Authorization":token

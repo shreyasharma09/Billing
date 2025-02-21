@@ -17,7 +17,7 @@ const AddCustomerModal = (props) => {
                 window.history.replaceState(null,null,"/")
                 return navigate("/",{replace:true})
             }  
-            const response=await fetch("https://quickbill-57hy.onrender.com/api/createcustomer",{
+            const response=await fetch("https://quickbill-1.onrender.com/api/createcustomer",{
                 method:"post",
                 body:JSON.stringify(obj),
                 headers:{

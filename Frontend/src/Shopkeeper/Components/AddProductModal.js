@@ -17,7 +17,7 @@ const AddProductModal = (props) => {
                 window.history.replaceState(null,null,"/")
                 return navigate("/",{replace:true})
             }
-            const response=await fetch("https://quickbill-57hy.onrender.com/api/addproduct",{
+            const response=await fetch("https://quickbill-1.onrender.com/api/addproduct",{
                 method:"post",
                 body:JSON.stringify(obj),
                 headers:{
