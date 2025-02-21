@@ -26,7 +26,7 @@ const InvoiceDetails = ({data}) => {
    
     const getCustomer=async(token,id)=>{
     try {
-        const response=await fetch("http://localhost:3010/api/getCustomer/"+id,{
+        const response=await fetch("https://quickbill-57hy.onrender.com/api/getCustomer/"+id,{
             headers:{
                 "Content-Type":"application/json",
                 "Authorization":token
@@ -43,7 +43,7 @@ const InvoiceDetails = ({data}) => {
     
     const getShopkeeper=async(token)=>{
     try {
-        const response=await fetch("http://localhost:3010/api/getShopkeeper",{
+        const response=await fetch("https://quickbill-57hy.onrender.com/api/getShopkeeper",{
             headers:{
                 "Content-Type":"application/json",
                 "Authorization":token

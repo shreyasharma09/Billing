@@ -19,7 +19,7 @@ const AddTransactionListComponent = () => {
           window.history.replaceState(null,null,"/")
           return navigate("/",{replace:true})
         }
-        const response=await fetch("http://localhost:3010/api/addpayment/"+customerinfo.id,{
+        const response=await fetch("https://quickbill-57hy.onrender.com/api/addpayment/"+customerinfo.id,{
           method:"post",
           body:JSON.stringify(obj),
           headers:{

@@ -19,7 +19,7 @@ const ApplicationUserDetails = () => {
     }, [])
     const getallusers = async (token) => {
         try {
-            const response = await fetch("http://localhost:3010/api/getallusers", {
+            const response = await fetch("https://quickbill-57hy.onrender.com/api/getallusers", {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": token
@@ -42,7 +42,7 @@ const ApplicationUserDetails = () => {
                 window.history.replaceState(null, null, "/")
                 return navigate("/", { replace: true })
             }
-            const response = await fetch("http://localhost:3010/api/enable", {
+            const response = await fetch("https://quickbill-57hy.onrender.com/api/enable", {
                 method: "put",
                 body: JSON.stringify({ id }),
                 headers: {
@@ -67,7 +67,7 @@ const ApplicationUserDetails = () => {
                 window.history.replaceState(null, null, "/")
                 return navigate("/", { replace: true })
             }
-            const response = await fetch("http://localhost:3010/api/disable", {
+            const response = await fetch("https://quickbill-57hy.onrender.com/api/disable", {
                 method: "put",
                 body: JSON.stringify({ id }),
                 headers: {

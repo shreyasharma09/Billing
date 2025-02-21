@@ -8,7 +8,7 @@ const AddItemModal = (props) => {
     const navigate=useNavigate()
     const getallitems=async(token)=>{
         try {
-            const response=await fetch("http://localhost:3010/api/getproducts",{
+            const response=await fetch("https://quickbill-57hy.onrender.com/api/getproducts",{
                 headers:{
                     "Content-Type":"application/json",
                     "Authorization":token

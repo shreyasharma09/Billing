@@ -14,7 +14,7 @@ const ReviewExcelData = ({data , setdata}) => {
                 window.history.replaceState(null,null,"/")
                 return navigate("/",{replace:true})
             } 
-            const response=await fetch("http://localhost:3010/api/addmultipleproducts",{
+            const response=await fetch("https://quickbill-57hy.onrender.com/api/addmultipleproducts",{
                 method:"post",
                 body:JSON.stringify({items:data}),
                 headers:{

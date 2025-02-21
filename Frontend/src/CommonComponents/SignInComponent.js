@@ -13,7 +13,7 @@ const SignInComponent = () => {
         try {
             e.preventDefault()
             setloading(true)
-            const response= await fetch("http://localhost:3010/api/login",{               //login api in backend is fetched in frontend
+            const response= await fetch("https://quickbill-57hy.onrender.com/api/login",{               //login api in backend is fetched in frontend
                 body: JSON.stringify(obj),
                 method: "post",
                 headers: {
@@ -35,7 +35,7 @@ const SignInComponent = () => {
     }
     const fetchuserdetails=async(token,remember)=>{
         try {
-           const response= await fetch("http://localhost:3010/api/fetchuserdetails",{
+           const response= await fetch("https://quickbill-57hy.onrender.com/api/fetchuserdetails",{
                method:"post",
                headers:{
                    "Content-Type":"application/json",

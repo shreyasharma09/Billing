@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import AddCustomerModal from './AddCustomerModal'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Title from "../../CommonComponents/Title"
 import Footer from "../../CommonComponents/Footer"
 const CustomerComponent = () => {
@@ -13,7 +13,7 @@ const CustomerComponent = () => {
    const customersperpage=5
    const getallcustomers=async(token)=>{
     try {
-        const response=await fetch("http://localhost:3010/api/getallcustomers",{
+        const response=await fetch("https://quickbill-57hy.onrender.com/api/getallcustomers",{
             headers:{
                 "Content-Type":"application/json",
                 "Authorization":token

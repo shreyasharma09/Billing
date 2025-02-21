@@ -12,7 +12,7 @@ const CreateExecutiveModal = (props) => {
     const navigate=useNavigate()
     const getallcityandstate=async(token)=>{
         try {
-        const response=await fetch("http://localhost:3010/api/getallcitiesandstates",{
+        const response=await fetch("https://quickbill-57hy.onrender.com/api/getallcitiesandstates",{
             headers:{
                 "Content-Type":"application/json",
                 "Authorization":token
@@ -47,7 +47,7 @@ const CreateExecutiveModal = (props) => {
                 window.history.replaceState(null,null,"/")
                 return navigate("/",{replace:true})
             }
-            const response=await fetch("http://localhost:3010/api/verifyexecutive",{
+            const response=await fetch("https://quickbill-57hy.onrender.com/api/verifyexecutive",{
                 method:"post",
                 body:JSON.stringify(obj),
                 headers:{
@@ -75,7 +75,7 @@ const CreateExecutiveModal = (props) => {
                 window.history.replaceState(null,null,"/")
                 return navigate("/",{replace:true})
             }
-            const response=await fetch("http://localhost:3010/api/createexecutive",{
+            const response=await fetch("https://quickbill-57hy.onrender.com/api/createexecutive",{
                 method:"post",
                 body:JSON.stringify({...obj,otp}),
                 headers:{

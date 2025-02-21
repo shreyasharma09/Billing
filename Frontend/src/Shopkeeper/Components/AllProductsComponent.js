@@ -37,7 +37,7 @@ const AllProductsComponent = () => {
 },[data,currentpage])
    const getallproducts=async(token)=>{
     try {
-        const response=await fetch("http://localhost:3010/api/getproducts",{
+        const response=await fetch("https://quickbill-57hy.onrender.com/api/getproducts",{
             headers:{
                 "Content-Type":"application/json",
                 "Authorization":token
@@ -60,7 +60,7 @@ const AllProductsComponent = () => {
             window.history.replaceState(null,null,"/")
             return navigate("/",{replace:true})
         }
-        const response=await fetch("http://localhost:3010/api/deleteproduct/"+id,{
+        const response=await fetch("https://quickbill-57hy.onrender.com/api/deleteproduct/"+id,{
             method:"delete",
             headers:{
                 "Content-Type":"application/json",

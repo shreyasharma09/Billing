@@ -11,7 +11,7 @@ const DashboardComponent = () => {
 
   const getAllData=async(token)=>{
     try {
-      const response=await axios.get("http://localhost:3010/api/getSalesInfo",{  //axios automatically convert data into json form
+      const response=await axios.get("https://quickbill-57hy.onrender.com/api/getSalesInfo",{  //axios automatically convert data into json form
         headers:{
           "Content-Type":"application/json",
           "Authorization":token
@@ -26,7 +26,7 @@ const DashboardComponent = () => {
 
   const getTransactions=async(token)=>{
     try {
-      const response=await axios.get("http://localhost:3010/api/latestTransactions",{
+      const response=await axios.get("https://quickbill-57hy.onrender.com/api/latestTransactions",{
         headers:{
           "Content-Type":"application/json",
           "Authorization":token
@@ -41,7 +41,7 @@ const DashboardComponent = () => {
 
   const getInvoices=async(token)=>{
     try {
-      const response=await fetch("http://localhost:3010/api/latestInvoices",{
+      const response=await fetch("https://quickbill-57hy.onrender.com/api/latestInvoices",{
         headers:{
           "Content-Type":"application/json",
           "Authorization":token
